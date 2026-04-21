@@ -28,6 +28,14 @@
   "author": "kVadrum",
   "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kVadrum/ctxlens.git"
+  },
+  "homepage": "https://github.com/kVadrum/ctxlens#readme",
+  "bugs": {
+    "url": "https://github.com/kVadrum/ctxlens/issues"
+  },
   "engines": {
     "node": ">=18"
   },

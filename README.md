@@ -1,5 +1,11 @@
 # ctxlens
 
+[![CI](https://github.com/kVadrum/ctxlens/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kVadrum/ctxlens/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/ctxlens.svg)](https://www.npmjs.com/package/ctxlens)
+[![npm downloads](https://img.shields.io/npm/dm/ctxlens.svg)](https://www.npmjs.com/package/ctxlens)
+[![license](https://img.shields.io/npm/l/ctxlens.svg)](https://github.com/kVadrum/ctxlens/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/ctxlens.svg)](https://www.npmjs.com/package/ctxlens)
+
 **Token budget analyzer for AI context windows — like `du` for tokens.**
 
 Every developer using AI coding tools hits the same wall: *"Does my codebase fit in context?"* You paste files until the model complains, guess at what to include, and hope for the best. ctxlens gives you the answer in one command.
