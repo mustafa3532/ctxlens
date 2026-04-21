@@ -301,9 +301,9 @@ ctxlens models
 
 | Model | Provider | Context Window | Tokenizer |
 |-------|----------|---------------|-----------|
-| claude-opus-4-6 | Anthropic | 200k | cl100k_base |
-| claude-sonnet-4-6 | Anthropic | 200k | cl100k_base |
-| claude-haiku-4-5 | Anthropic | 200k | cl100k_base |
+| claude-opus-4-6 | Anthropic | 200k | cl100k_base \* |
+| claude-sonnet-4-6 | Anthropic | 200k | cl100k_base \* |
+| claude-haiku-4-5 | Anthropic | 200k | cl100k_base \* |
 | gpt-5.4 | OpenAI | 1M | o200k_base |
 | gpt-5.4-mini | OpenAI | 1M | o200k_base |
 | gpt-4.1 | OpenAI | 1M | o200k_base |
@@ -324,7 +324,7 @@ ctxlens models
 | mistral-large | Mistral | 131k | cl100k_base \* |
 | codestral | Mistral | 262k | cl100k_base \* |
 
-\* Approximation — these models use different tokenizers natively. Token counts may vary ±10–15%. This is acceptable for budget planning — you're estimating context usage, not calculating billing.
+\* Approximation — these models use their own native tokenizers (different from tiktoken). Token counts may vary ±10–15% from native. This is acceptable for budget planning — you're estimating context usage, not calculating billing. See [Tokenizer accuracy](#tokenizer-accuracy) below.
 
 ### Custom models
 
@@ -452,12 +452,23 @@ Both approaches fail the PR if the codebase exceeds the threshold.
 
 ## Tokenizer accuracy
 
-ctxlens uses tiktoken encodings via [@dqbd/tiktoken](https://github.com/dqbd/tiktoken) (WASM):
+ctxlens uses [@dqbd/tiktoken](https://github.com/dqbd/tiktoken) (WASM) for all tokenization. Tiktoken is OpenAI's tokenizer — it ships two encodings, and ctxlens uses both:
 
-- **cl100k_base** — exact for Claude and GPT-4 class models
-- **o200k_base** — exact for GPT-4o, GPT-4.1, GPT-5.4, o3, o4-mini
+- **o200k_base** — *native and exact* for OpenAI's current models: GPT-4o, GPT-4.1 (and mini), GPT-5.4 (and mini), o3, o4-mini.
+- **cl100k_base** — an older OpenAI encoding. No model in the registry uses it natively today; ctxlens uses it as a **proxy encoding** for every non-OpenAI model.
 
-For models using SentencePiece natively (Gemini, Llama, DeepSeek, Mistral, Grok), cl100k_base is used as an approximation. Token counts may differ by ±10–15% from the native tokenizer. For budget planning this is fine — you're making context allocation decisions, not calculating API billing.
+**Every non-OpenAI model in the registry — including Claude — is an approximation.** ctxlens does not embed any native non-tiktoken tokenizer; every one of these models is tokenized through cl100k_base as a proxy. The models table marks them with `\*`, and `models/registry.json` carries a `tokenizerNote` per model. What each provider actually uses natively:
+
+- **Anthropic (Claude 3-generation)** — ~65k-vocab BPE; community analysis finds ~70% of its vocabulary overlaps cl100k_base, which is why cl100k works as a tolerable proxy here. Claude 4+ may use a different tokenizer; treat counts as indicative, not authoritative.
+- **Google (Gemini)** — SentencePiece.
+- **Meta (Llama 3/4)** — 128k-vocab tiktoken-style BPE. Structurally close to o200k_base, but ctxlens maps it to cl100k_base for simplicity.
+- **xAI (Grok)** — 131k-vocab BPE implemented via the SentencePiece framework (Llama 2-style).
+- **Mistral / Codestral (current generation)** — Tekken, a tiktoken-based BPE. This replaced the older SentencePiece-based Mistral tokenizers as of Mistral Large 2 / Codestral 22B / Mixtral 8x22B.
+- **DeepSeek** — its own BPE (less publicly documented).
+
+Expect **±10–15% drift** vs. the native tokenizer as a rule of thumb — higher on non-English text, lower on English code where BPE vocabularies converge on similar splits. Claude specifically tends toward the lower end of that range against cl100k_base thanks to the vocabulary overlap noted above. That's fine for budget planning (are you at 40% or 95% of the window?) and wrong for billing math (invoice-grade token counts). **ctxlens is the former tool, not the latter.** For exact counts against a specific provider, use that provider's own tokenizer or `count_tokens` API.
+
+**Why not bundle the native tokenizers?** Each is a separate dependency with its own binary, vocab file, license, and update cadence. Bundling all of them would make the package significantly larger, add cold-start cost, and couple ctxlens's release cycle to seven upstreams. For a tool whose core answer is "you're at 62% of context," the extra precision isn't worth the weight.
 
 ## License
 
